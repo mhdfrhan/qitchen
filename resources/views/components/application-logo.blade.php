@@ -1,0 +1,1 @@
+<img src="{{ asset('assets/logo.svg') }}" alt="{{ config('app.name') }}" class="{{ $attributes->get('class') }}">

@@ -1,0 +1,49 @@
+Qitchen
+
+Untuk website Qitchen, sebuah sistem booking restoran online, berikut adalah fitur-fitur yang dibutuhkan:
+
+1. Pendaftaran dan Login Pengguna✅
+   - Pendaftaran Pengguna: Fitur registrasi untuk membuat akun dengan email, media sosial, atau login tamu.
+   - Profil Pengguna: Halaman untuk mengelola informasi pengguna (nama, email, nomor telepon, preferensi makanan).
+   
+2. Reservasi Meja✅
+   - Booking Meja: Pengguna dapat memilih tanggal, waktu, dan jumlah tamu untuk memesan meja.
+   - Pilih Lokasi Tempat Duduk: Fitur untuk memilih lokasi meja di restoran (indoor, outdoor, dekat jendela, dll.).
+   - Kalender Ketersediaan: Kalender yang menunjukkan slot waktu yang tersedia atau penuh.
+
+3. Menu Digital✅
+   - Lihat Menu: Pengguna bisa melihat menu restoran, termasuk kategori makanan (appetizers, main course, desserts).
+   - Deskripsi Makanan dan Harga: Deskripsi bahan, porsi, dan harga makanan.
+   - Filter Makanan: Filter makanan berdasarkan kategori (vegetarian, gluten-free, halal).
+   - Review Makanan: Pengguna bisa melihat dan memberikan ulasan serta rating makanan.
+
+4. Pesan Makanan Sebelum Tiba✅
+   - Pre-order: Fitur untuk memesan makanan lebih awal saat reservasi meja, sehingga makanan siap ketika mereka tiba.
+   - Customisasi Pesanan: Pengguna dapat menyesuaikan pesanan (misalnya: tingkat kepedasan, tambahan topping).
+   - Estimasi Waktu Penyajian: Informasi estimasi kapan makanan akan siap.
+
+5. Pembayaran Online✅
+   - Metode Pembayaran: Opsi pembayaran melalui kartu kredit/debit, e-wallet, atau cash on delivery.
+   - Split Bill: Fitur bagi pengguna untuk membagi tagihan jika mereka makan dalam kelompok.
+   - Sistem Diskon atau Kupon: Pengguna bisa memasukkan kode promo untuk mendapatkan diskon.
+
+6. Notifikasi dan Pengingat
+   - Konfirmasi Reservasi: Email atau SMS yang mengonfirmasi booking meja dan pre-order makanan.
+   - Pengingat Reservasi: Pengingat otomatis sebelum waktu reservasi.
+   - Update Status Pesanan: Notifikasi jika ada perubahan pada status pesanan atau booking.
+
+7. Manajemen Restoran (Admin)
+   - Manajemen Reservasi: Dashboard untuk melihat, menerima, atau menolak reservasi.
+   - Manajemen Menu: Fitur untuk menambah, mengedit, atau menghapus item makanan di menu restoran. ✅
+   - Laporan Keuangan dan Statistik: Laporan mengenai jumlah reservasi, penjualan makanan, dan pendapatan restoran.
+   - Atur Ketersediaan Meja: Pengaturan jumlah meja yang tersedia berdasarkan waktu dan kapasitas.
+
+8. Peta Lokasi dan Petunjuk Arah
+   - Lokasi Restoran: Peta interaktif untuk membantu pengguna menemukan lokasi restoran.
+   - Petunjuk Arah: Integrasi dengan Google Maps untuk mendapatkan petunjuk arah menuju restoran.
+
+9.Fitur Loyalty dan Reward
+   - Program Loyalitas: Pengguna mendapatkan poin setiap kali memesan, yang bisa ditukarkan dengan diskon.
+   - Referral Program: Pengguna dapat mereferensikan teman dan mendapatkan reward atau diskon.
+
+Dengan fitur-fitur ini, website Qitchen dapat memberikan pengalaman yang lengkap dan user-friendly untuk memesan meja dan makanan secara online.
