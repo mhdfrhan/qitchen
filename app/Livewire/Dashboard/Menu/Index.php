@@ -23,6 +23,12 @@ class Index extends Component
         return view('livewire.dashboard.menu.index');
     }
 
+    #[On(['menu-created', 'menu-updated', 'menu-deleted'])]
+    public function resetSelectedMenuId()
+    {
+        $this->selectedEditMenuId = null;
+    }
+
     public function selectEditMenu($id)
     {
         try {

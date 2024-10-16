@@ -21,6 +21,12 @@ class Create extends Component
         'value' => 'required',
     ];
 
+    protected $messages = [
+        'required' => 'The :attribute field is required.',
+        'image' => 'The :attribute must be an image.',
+        'max' => 'The :attribute may not be greater than :max.',  
+    ];
+
     public function updatedTitle()
     {
         $this->slug = $this->generateUniqueSlug(Str::slug($this->title));

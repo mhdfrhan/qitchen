@@ -156,7 +156,7 @@
                         </div>
                         @if ($reservation->payment_option == 50)
                             <div class="w-full md:w-1/2 md:px-3">
-                                <h2 class="text-lg font-medium text-light">Payment 50% (- Rp. {{ number_format($amount) }})</h2>
+                                <h2 class="text-lg font-medium text-light">Payment 50% (- Rp. {{ number_format($reservation->total_amount) }})</h2>
                                 <form wire:submit.prevent="payManual" class="space-y-3 mt-2">
                                     <div>
                                         <x-input-label for="pay" value="{{ __('Pay') }}" />

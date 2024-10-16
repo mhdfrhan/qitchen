@@ -3,7 +3,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/trix.css') }}">
         <script type="text/javascript" src="{{ asset('js/trix.umd.min.js') }}"></script>
     @endpush
-    <div class="bg-white rounded-2xl shadow-lg shadow-neutral-200 p-6 max-w-2xl">
+    <div class="bg-white rounded-2xl shadow-lg shadow-neutral-200 p-6 max-w-3xl">
         <form wire:submit.prevent='store' class="inline space-y-6">
             <div>
                 @if ($image)

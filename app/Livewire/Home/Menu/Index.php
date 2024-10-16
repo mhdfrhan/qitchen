@@ -18,7 +18,7 @@ class Index extends Component
 
     public function mount()
     {
-        $this->menus = Menu::all();
+        $this->menus = Menu::where('available', 1)->orderBy('category_id')->get();
         $this->menuCategory = MenuCategory::all();
     }
 

@@ -22,7 +22,7 @@
                     <div class="flex items-start gap-3 w-full">
                         <div>
                             <img src="{{ asset($article->image) }}" alt="{{ $article->title }}"
-                                class="rounded-2xl w-full max-h-56 h-full object-cover">
+                                class="rounded-2xl w-full max-h-56 h-full object-cover" loading="lazy">
                         </div>
                     </div>
                 </div>

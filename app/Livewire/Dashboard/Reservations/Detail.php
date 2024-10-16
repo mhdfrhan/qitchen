@@ -42,6 +42,7 @@ class Detail extends Component
         $pay = round(floatval($this->pay), 2);
         $amount = round(floatval($this->amount), 2);
 
+
         if ($pay < $amount) {
             $this->dispatch('notify', message: 'Insufficient payment', type: 'error');
             return;
@@ -62,7 +63,7 @@ class Detail extends Component
     public function loadReservationItems()
     {
         $this->reservationItems = $this->reservation->details()->latest()->get();
-        $this->amount =$this->reservation->total_amount + 0.5;
+        $this->amount = (int)$this->reservation->total_amount;
     }
 
     public function loadReservation()
