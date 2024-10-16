@@ -22,6 +22,7 @@
                     @include('home.partials.sidebar')
                 </div>
                 <div class="w-full lg:w-3/4 lg:px-4 mt-8 lg:mt-0">
+                    <livewire:home.dashboard.check-phone>
                     @if (!request()->routeIs('home.dashboard') && !request()->routeIs('reservation.detail'))
                         {{-- breadcrumb --}}
                         <nav aria-label="Breadcrumb" class="mb-6">

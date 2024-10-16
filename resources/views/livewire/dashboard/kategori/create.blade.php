@@ -4,11 +4,11 @@
         <div class="flex items-center justify-between gap-3">
             <div>
                 <h2 class="text-lg font-medium text-light">
-                    {{ __('Tambahkan kategori') }}
+                    {{ __('Add Category') }}
                 </h2>
 
                 <p class="mt-1 text-sm text-neutral-400">
-                    {{ __('Isi form di bawah ini untuk menambahkan kategori menu') }}
+                    {{ __('Add new category') }}
                 </p>
             </div>
             <div>
@@ -42,7 +42,7 @@
 
         <div class="mt-6">
             <x-primary-button class="w-full">
-                {{ __('Tambahkan menu') }}
+                {{ __('Add category') }}
             </x-primary-button>
         </div>
     </form>

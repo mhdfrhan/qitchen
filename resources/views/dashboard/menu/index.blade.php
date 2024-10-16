@@ -5,7 +5,7 @@
         <div class="mb-8 flex items-center justify-between flex-wrap gap-3">
             <div>
                 <h3 class="text-2xl font-bold">{{ $title }}</h3>
-                <p class="text-neutral-500">Halaman untuk menambahkan kategori dan list makanan</p>
+                <p class="text-neutral-500">Page to add food categories and lists</p>
             </div>
             <div class="inline-flex items-center gap-3">
                 <div>
@@ -20,7 +20,7 @@
                                 stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                 stroke-width="22" />
                         </svg>
-                        {{ __('Kategori') }}
+                        {{ __('Category') }}
                     </x-dark-button>
 
                     <x-modal name="kategori-create" :show="$errors->isNotEmpty()" max-width="lg" focusable>
@@ -48,6 +48,7 @@
                 </div>
             </div>
         </div>
+        <livewire:dashboard.menu.category.index >
         <livewire:dashboard.menu.index>
     </section>
 </x-app-layout>

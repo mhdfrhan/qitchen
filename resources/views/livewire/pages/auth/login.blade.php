@@ -19,10 +19,19 @@ new #[Layout('layouts.guest')] class extends Component {
 
         Session::regenerate();
 
-        if (Auth::user()->role == 'admin') {
-            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: false);
-        } else {
-            $this->redirectIntended(default: route('home', absolute: false), navigate: false);
+        switch (Auth::user()->role) {
+            case 'admin':
+                $this->redirect(route('dashboard'), navigate: false);
+                break;
+            case 'koki':
+                $this->redirect(route('kitchen'), navigate: false);
+                break;
+            case 'kasir':
+                $this->redirect(route('kasir'), navigate: false);
+                break;
+            default:
+                $this->redirect(route('home.dashboard'), navigate: false);
+                break;
         }
     }
 }; ?>
@@ -71,6 +80,15 @@ new #[Layout('layouts.guest')] class extends Component {
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
-        <p class="text-sm text-neutral-400 text-center mt-3">Don't have an account? <a class="text-light hover:underline" href="{{ route('register') }}" wire:navigate>Register</a></p>
+        <div class="mt-4 text-center">
+            <a href="{{ route('auth.google') }}"
+                class="border border-borderColor px-4 py-2 rounded-lg inline-flex items-center gap-3 text-light hover:bg-neutral-900 duration-300">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/480px-Google_%22G%22_logo.svg.png"
+                    alt="Google Logo" class="h-6">
+                <p>Login with Google</p>
+            </a>
+        </div>
+        <p class="text-sm text-neutral-400 text-center mt-3">Don't have an account? <a
+                class="text-light hover:underline" href="{{ route('register') }}" wire:navigate>Register</a></p>
     </form>
 </div>

@@ -5,6 +5,7 @@ namespace App\Livewire\Home\Cart;
 use App\Models\CartItems;
 use App\Models\Carts;
 use App\Models\Discounts;
+use App\Models\Reservations;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -12,10 +13,11 @@ class Index extends Component
 {
     public $cartItems, $coupon, $totalDiscount, $usePoints;
 
-    public function mount() {
+    public function mount()
+    {
         $carts = Carts::where('user_id', Auth::user()->id)->where('status', 'pending')->first();
 
-        if ($carts->used_points > 0) {
+        if ($carts && $carts->used_points > 0) {
             $this->usePoints = true;
         }
     }

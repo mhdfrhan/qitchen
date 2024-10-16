@@ -76,27 +76,35 @@ class ReservationDetail extends Component
 
     protected function getItemsDetails()
     {
-        $items = [];
+        try {
+            $items = [];
+            $totalFullPrice = 0;
 
-        foreach ($this->cartItems as $item) {
-            $items[] = [
-                'id' => $item->menu_id,
-                'price' => $item->price,
-                'quantity' => $item->quantity,
-                'name' => $item->menu->name,
-            ];
+            foreach ($this->cartItems as $item) {
+                $fullPrice = (int)$item->price + $item->price * 0.11;
+                $totalFullPrice += $fullPrice * $item->quantity;
+
+                $items[] = [
+                    'id' => $item->menu_id,
+                    'price' => $fullPrice,
+                    'quantity' => $item->quantity,
+                    'name' => $item->menu->name,
+                ];
+            }
+
+            // Hitung faktor diskon
+            $discountFactor = $this->reservation->total_amount / $totalFullPrice;
+
+            // Sesuaikan harga setiap item
+            foreach ($items as &$item) {
+                $item['price'] = round($item['price'] * $discountFactor);
+            }
+
+            return $items;
+        } catch (\Throwable $th) {
+            $this->dispatch('notify', message: $th->getMessage(), type: 'error');
+            return;
         }
-
-        // Tambahkan detail reservasi sebagai item tambahan
-        $items[] = [
-            'id' => 'reservation',
-            'price' => 0, // Jika tidak dikenakan biaya khusus untuk reservasi
-            'quantity' => 1,
-            'name' => 'Reservation on ' . $this->reservation->reservation_date . ' at ' . $this->reservation->reservation_time .
-                ', Table ' . $this->reservation->table->table_number . ', for ' . $this->reservation->guest_count . ' guests',
-        ];
-
-        return $items;
     }
 
     protected function updateReservationWithSnapToken()
@@ -114,8 +122,6 @@ class ReservationDetail extends Component
         }
 
         $this->pointsToAdd = $this->calculateLoyaltyPoints($this->reservation->total_amount);
-        $user->loyalty_points += $this->pointsToAdd;
-        $user->save();
     }
 
     protected function calculateLoyaltyPoints($totalAmount)
@@ -138,9 +144,14 @@ class ReservationDetail extends Component
     #[On('payment-success')]
     public function paymentSuccess()
     {
+        $user = Auth::user();
+
         // Perbarui status reservasi
         $this->reservation->status = 'waiting';
         $this->reservation->save();
+
+        $user->loyalty_points += $this->pointsToAdd;
+        $user->save();
 
         // Hapus keranjang
         $this->carts->delete();
@@ -164,7 +175,7 @@ class ReservationDetail extends Component
 
     public function navigate($route)
     {
-        return $this->redirect(route($route, encrypt($this->reservation->id)));
+        return $this->redirect(route($route, $this->reservation->reservation_code), navigate: true);
     }
 
     public function render()

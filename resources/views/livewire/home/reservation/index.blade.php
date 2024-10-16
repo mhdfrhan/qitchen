@@ -12,7 +12,11 @@
                     <div>
                         <x-input-label for="time">Time</x-input-label>
                         <x-text-input type="time" id="time" wire:model.live="time" class="text-light"
-                            step="60" min="09:00" max="21:00" />
+                            step="60" :min="strtotime($date) > strtotime(date('Y-m-d'))
+                                ? '09:00'
+                                : (date('H:i') <= '08:00'
+                                    ? '09:00'
+                                    : date('H:i', strtotime('+1 hour')))" max="21:00" />
                     </div>
                 </div>
             </div>

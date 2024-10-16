@@ -49,13 +49,15 @@
         </ul>
     </nav>
 
-    <div class="fixed top-12 right-16 z-50">
-        <livewire:home.cart.icon>
-    </div>
+    @if (!request()->routeIs('articles') && !request()->routeIs('about') && !request()->routeIs('articles.detail') && !request()->routeIs('contact') && !request()->routeIs('home'))
+        <div class="fixed top-12 right-16 z-50">
+            <livewire:home.cart.icon>
+        </div>
+    @endif
 
-    <div class="bg-black h-screen hidden" id="overlayNav">
-        <div class="fixed p-[22px] inset-0 z-50 block">
-            <div class="border border-borderColor bg-[#111111] h-full rounded-2xl p-6">
+    <div class="bg-black h-screen hidden z-50" id="overlayNav">
+        <div class="fixed p-[22px] inset-0 z-50 block bg-black h-screen ">
+            <div class="border border-borderColor bg-[#111111] h-full rounded-2xl p-6 overflow-hidden">
                 <button id="closeNav"
                     class="border border-borderColor rounded-lg inline-flex items-center justify-center w-9 h-9 absolute">
                     <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
@@ -85,7 +87,7 @@
                             </a>
                         </li>
                         <li class="slide-right">
-                            <a href=""
+                            <a href="{{ route('reservation') }}" wire:navigate
                                 class="font-forum uppercase inline-block md:text-7xl text-5xl min-[480px]:text-6xl lg:text-7xl hover:text-yellow duration-500">
                                 reservation
                             </a>
@@ -97,13 +99,13 @@
                             </a>
                         </li>
                         <li class="slide-right">
-                            <a href=""
+                            <a href="{{ route('contact') }}" wire:navigate
                                 class="font-forum uppercase inline-block md:text-7xl text-5xl min-[480px]:text-6xl lg:text-7xl hover:text-yellow duration-500">
                                 contact
                             </a>
                         </li>
                         <li class="slide-right">
-                            <a href=""
+                            <a href="{{ route('articles') }}" wire:navigate
                                 class="font-forum uppercase inline-block md:text-7xl text-5xl min-[480px]:text-6xl lg:text-7xl hover:text-yellow duration-500">
                                 blog
                             </a>

@@ -24,12 +24,13 @@ class Create extends Component
                 'description' => $this->description,
             ]);
 
-            $this->dispatch('notify', message: 'Kategori berhasil ditambahkan', type: 'success');
+            $this->dispatch('notify', message: 'Category successfully created', type: 'success');
             $this->dispatch('close');
             $this->reset();
+            $this->dispatch('categoryCreated');
         } catch (\Throwable $th) {
             $this->dispatch('close');
-            $this->dispatch('alert', ['message' => 'Opss terjadi kesalahan', 'type' => 'error']);
+            $this->dispatch('alert', ['message' => 'Opss something went wrong', 'type' => 'error']);
         }
     }
 

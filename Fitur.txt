@@ -33,16 +33,16 @@ Untuk website Qitchen, sebuah sistem booking restoran online, berikut adalah fit
    - Update Status Pesanan: Notifikasi jika ada perubahan pada status pesanan atau booking.
 
 7. Manajemen Restoran (Admin)
-   - Manajemen Reservasi: Dashboard untuk melihat, menerima, atau menolak reservasi.
+   - Manajemen Reservasi: Dashboard untuk melihat, menerima, atau menolak reservasi.✅
    - Manajemen Menu: Fitur untuk menambah, mengedit, atau menghapus item makanan di menu restoran. ✅
-   - Laporan Keuangan dan Statistik: Laporan mengenai jumlah reservasi, penjualan makanan, dan pendapatan restoran.
+   - Laporan Keuangan dan Statistik: Laporan mengenai jumlah reservasi, penjualan makanan, dan pendapatan restoran.✅
    - Atur Ketersediaan Meja: Pengaturan jumlah meja yang tersedia berdasarkan waktu dan kapasitas.
 
-8. Peta Lokasi dan Petunjuk Arah
+8. Peta Lokasi dan Petunjuk Arah✅
    - Lokasi Restoran: Peta interaktif untuk membantu pengguna menemukan lokasi restoran.
    - Petunjuk Arah: Integrasi dengan Google Maps untuk mendapatkan petunjuk arah menuju restoran.
 
-9.Fitur Loyalty dan Reward
+9.Fitur Loyalty dan Reward ✅
    - Program Loyalitas: Pengguna mendapatkan poin setiap kali memesan, yang bisa ditukarkan dengan diskon.
    - Referral Program: Pengguna dapat mereferensikan teman dan mendapatkan reward atau diskon.
 

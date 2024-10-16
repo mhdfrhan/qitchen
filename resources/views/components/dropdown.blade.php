@@ -1,7 +1,7 @@
 @props([
     'align' => 'right',
     'width' => '48',
-    'contentClasses' => 'py-1 border bg-[#111116] border-borderColor rounded-xl',
+    'contentClasses' => 'py-1 border bg-black border-borderColor rounded-xl',
 ])
 
 @php

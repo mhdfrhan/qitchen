@@ -105,7 +105,7 @@
                     </div>
                 </div>
             </a>
-            <a href="" class="block relative overflow-hidden group flex-1 w-full h-full">
+            <a href="{{ route('reservation') }}" wire:navigate class="block relative overflow-hidden group flex-1 w-full h-full">
                 <div class="relative h-full">
                     <img src="{{ asset('assets/img/2.webp') }}" class="h-full object-cover w-full rounded-2xl"
                         alt="">
@@ -138,7 +138,7 @@
                     </div>
                 </div>
             </a>
-            <a href="" class="block relative overflow-hidden group flex-1 w-full h-full">
+            <a href="{{ route('about') }}"  wire:navigate class="block relative overflow-hidden group flex-1 w-full h-full">
                 <div class="relative h-full">
                     <img src="{{ asset('assets/img/3.webp') }}" class="h-full object-cover w-full rounded-2xl"
                         alt="">

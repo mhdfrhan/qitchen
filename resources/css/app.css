@@ -8,7 +8,7 @@ body {
 }
 
 body {
-    @apply font-sans font-medium text-gray-900;
+    @apply font-sans font-medium text-black;
 }
 
 .navMenu .slide-right {
@@ -43,9 +43,40 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .apexcharts-tooltip {
-    @apply !bg-neutral-900 !text-light !border-neutral-800  !shadow !shadow-neutral-700/30
+    @apply !bg-neutral-900 !text-light !border-neutral-800  !shadow !shadow-neutral-700/30;
 }
 
 .apexcharts-tooltip-title {
-    @apply !bg-neutral-900 !border-neutral-800
+    @apply !bg-neutral-900 !border-neutral-800;
+}
+
+trix-editor {
+    @apply !min-h-[300px] !rounded-xl;
+}
+
+trix-editor ul,
+.article-body ul {
+    @apply list-disc list-inside space-y-2 ml-2 mt-2;
+}
+
+trix-editor ol,
+.article-body ol {
+    @apply list-decimal list-inside space-y-2 ml-2 mt-2;
+}
+
+trix-editor a,
+.article-body a {
+    @apply text-blue-500 underline;
+}
+
+.splide__arrow {
+    @apply !bg-neutral-600/70 
+}
+
+.splide__arrow svg {
+    @apply !fill-white
+}
+
+.google-map {
+    filter: grayscale(100%) invert(92%) contrast(83%);
 }

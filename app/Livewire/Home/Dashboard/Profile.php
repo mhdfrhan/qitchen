@@ -13,61 +13,75 @@ use Livewire\Component;
 class Profile extends Component
 {
     public $name, $email;
-    public $current_password, $password, $password_confirmation;
+    public $current_password, $password, $password_confirmation, $phone;
 
     public function mount()
     {
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
+        $this->phone = Auth::user()->phone;
     }
 
     public function updateProfileInformation()
     {
         $user = Auth::user();
 
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
-        ]);
+        try {
+            $validated = $this->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+                'phone' => ['required', 'numeric'],
+            ]);
+        } catch (ValidationException $th) {
+            $this->dispatch('notify', message: $th->getMessage(), type: 'error');
+            return;
+        }
+
+        if ($user->phone == null) {
+            $this->dispatch('phoneAdded');
+        }
 
         $user->fill($validated);
-
         $user->save();
+
 
         $this->dispatch('notify', message: 'Profile successfully updated', type: 'success');
     }
 
+
     public function updatePassword()
     {
-        // Validasi input
+        $user = Auth::user();
+
         try {
             $this->validate([
-                'current_password' => ['required', 'string'],
-                'password' => ['required', 'string', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
+                'password' => ['required', 'string', 'confirmed', Password::min(8)],
             ]);
         } catch (ValidationException $th) {
             $this->dispatch('notify', message: $th->getMessage(), type: 'error');
-            //throw $th;
-        }
-
-        $user = Auth::user();
-
-        // Memeriksa apakah kata sandi saat ini benar
-        if (!Hash::check($this->current_password, $user->password)) {
-            $this->dispatch('notify', message: 'Current password is incorrect', type: 'error');
             return;
         }
 
-        // Update kata sandi pengguna
-        $user->password = Hash::make($this->password);
-        $user->save();
+        if ($user->google_id) {
+            $user->password = Hash::make($this->password);
+            $user->save();
 
-        // Notifikasi sukses
-        $this->dispatch('notify', message: 'Password successfully updated', type: 'success');
+            $this->dispatch('notify', message: 'Password successfully updated', type: 'success');
+            $this->reset(['password', 'password_confirmation']);
+        } else {
+            if (!Hash::check($this->current_password, $user->password)) {
+                $this->dispatch('notify', message: 'Current password is incorrect', type: 'error');
+                return;
+            }
 
-        // Reset input
-        $this->reset(['current_password', 'password', 'password_confirmation']);
+            $user->password = Hash::make($this->password);
+            $user->save();
+
+            $this->dispatch('notify', message: 'Password successfully updated', type: 'success');
+            $this->reset(['current_password', 'password', 'password_confirmation']);
+        }
     }
+
 
     public function render()
     {

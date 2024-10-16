@@ -70,31 +70,39 @@
                 <p class="text-textColor/70">Guest Count</p>
                 <p class="text-textColor/70">{{ $reservation->guest_count }} Person</p>
             </div>
-            <div class="flex items-center justify-between ">
-                <p class="text-green-500">Loyalty Points</p>
-                <p class="text-green-500 inline-flex items-center gap-1 font-semibold">
-                    + Rp. {{ number_format($pointsToAdd) }}
-                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                        <rect width="256" height="256" fill="none" />
-                        <ellipse cx="96" cy="84" rx="80" ry="36" fill="none"
-                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
-                        <path d="M16,84v40c0,19.88,35.82,36,80,36s80-16.12,80-36V84" fill="none"
-                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
-                        <line x1="64" y1="117" x2="64" y2="157" fill="none"
-                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
-                        <path
-                            d="M176,96.72c36.52,3.34,64,17.86,64,35.28,0,19.88-35.82,36-80,36-19.6,0-37.56-3.17-51.47-8.44"
-                            fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="16" />
-                        <path d="M80,159.28V172c0,19.88,35.82,36,80,36s80-16.12,80-36V132" fill="none"
-                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
-                        <line x1="192" y1="165" x2="192" y2="205" fill="none"
-                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
-                        <line x1="128" y1="117" x2="128" y2="205" fill="none"
-                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
-                    </svg>
-                </p>
-            </div>
+            @if ($pointsToAdd > 0)
+                <div class="flex items-center justify-between ">
+                    <p class="text-green-500">Loyalty Points</p>
+                    <p class="text-green-500 inline-flex items-center gap-1 font-semibold">
+                        + Rp. {{ number_format($pointsToAdd) }}
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none" />
+                            <ellipse cx="96" cy="84" rx="80" ry="36" fill="none"
+                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="16" />
+                            <path d="M16,84v40c0,19.88,35.82,36,80,36s80-16.12,80-36V84" fill="none"
+                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="16" />
+                            <line x1="64" y1="117" x2="64" y2="157" fill="none"
+                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="16" />
+                            <path
+                                d="M176,96.72c36.52,3.34,64,17.86,64,35.28,0,19.88-35.82,36-80,36-19.6,0-37.56-3.17-51.47-8.44"
+                                fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="16" />
+                            <path d="M80,159.28V172c0,19.88,35.82,36,80,36s80-16.12,80-36V132" fill="none"
+                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="16" />
+                            <line x1="192" y1="165" x2="192" y2="205" fill="none"
+                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="16" />
+                            <line x1="128" y1="117" x2="128" y2="205" fill="none"
+                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="16" />
+                        </svg>
+                    </p>
+                </div>
+            @endif
         </div>
     </div>
     <div class="mt-8">
@@ -125,18 +133,20 @@
                     <p class="text-textColor/70">-Rp. {{ number_format($carts->used_points) }}</p>
                 </div>
             @endif
+
+            <div class="flex items-center justify-between">
+                <p class="text-textColor/70">Total </p>
+                <p class="text-textColor/70">Rp.
+                    {{ number_format($reservation->total_amount) }}
+                </p>
+            </div>
+
+            {{-- ambil sisa jika pengguna membayar 50% --}}
             @if ($reservation->payment_option == 50)
-                <div class="flex items-center justify-between">
-                    <p class="text-textColor/70">Total </p>
-                    <p class="text-textColor/70">Rp.
-                        {{ number_format($carts->total_amount * 0.5 + $carts->total_amount * 0.5 * 0.11) }} (50%)
-                    </p>
-                </div>
-            @else
-                <div class="flex items-center justify-between">
-                    <p class="text-textColor/70">Total </p>
-                    <p class="text-textColor/70">Rp.
-                        {{ number_format($reservation->total_amount) }}
+                <div class="flex items-center justify-between mt-4">
+                    <p class="text-textColor/70">Remaining payment</p>
+                    <p class="text-textColor/70">- Rp.
+                     {{ number_format($reservation->total_amount + 0.5) }}
                     </p>
                 </div>
             @endif
@@ -159,7 +169,7 @@
                         @this.dispatch('payment-success');
 
                         setTimeout(() => {
-                            @this.navigate('home.dashboard');
+                            @this.navigate('reservation.detail');
                         }, 4000);
                     },
                     // Optional

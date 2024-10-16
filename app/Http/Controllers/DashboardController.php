@@ -18,4 +18,28 @@ class DashboardController extends Controller
             'title' => 'Profile'
         ]);
     }
+
+    public function users() {
+        return view('dashboard.users', [
+            'title' => 'Users'
+        ]);
+    }
+
+    public function kitchen() {
+        return view('dashboard.kitchen.index', [
+            'title' => '| Kitchen'
+        ]);
+    }
+
+    public function kasir() {
+        return view('dashboard.kasir.index', [
+            'title' => '| Kasir'
+        ]);
+    }
+
+    public function reports() {
+        return view('dashboard.reports', [
+            'title' => 'Reports'
+        ]);
+    }
 }

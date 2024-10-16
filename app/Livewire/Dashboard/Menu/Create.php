@@ -59,13 +59,13 @@ class Create extends Component
                 'updated_at' => now(),
             ]);
 
-            $this->dispatch('notify', message: 'Menu berhasil ditambahkan', type: 'success');
+            $this->dispatch('notify', message: 'Menu successfully created', type: 'success');
             $this->dispatch('menu-created');
             $this->dispatch('close');
             $this->reset();
         } catch (\Throwable $th) {
             $this->dispatch('close');
-            $this->dispatch('alert', ['message' => 'Opss terjadi kesalahan', 'type' => 'error']);
+            $this->dispatch('notify', message: 'Opss something went wrong', type: 'error');
         }
     }
 

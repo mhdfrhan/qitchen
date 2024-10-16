@@ -33,9 +33,9 @@
                     </div>
                     <div class="flex flex-wrap -mx-4 gap-y-6 xl:gap-y-4 xl:block xl:mx-0">
                         @foreach ($menus->where('category_id', $category->id) as $menu)
-                            <div class="w-full sm:w-1/2 px-4 xl:px-0 xl:block xl:w-full">
+                            <div class="w-full sm:w-1/2 px-4 xl:px-0 xl:block xl:w-full mb-4 last:mb-0">
                                 <div
-                                    class="hover:bg-neutral-800  border border-borderColor xl:border-0 p-3 xl:p-0 rounded-xl duration-300 ease-in-out hover:p-3 relative group">
+                                    class="hover:bg-neutral-800  border border-borderColor xl:border-0 p-3 rounded-xl duration-300 ease-in-out relative group">
                                     <div class="flex flex-wrap items-center -mx-4">
                                         <div class="w-full xl:w-1/3 px-4">
                                             <div class="w-full mb-4 xl:mb-0">

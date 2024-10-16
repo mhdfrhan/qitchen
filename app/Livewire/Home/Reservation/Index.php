@@ -61,11 +61,16 @@ class Index extends Component
 
     public function mount()
     {
-        $this->peoples = session('numberpeople', 0);
+        $this->peoples = 0;
         $this->numberpeople = $this->peoples;
 
         $this->loadExistingReservation();
         $this->loadTables();
+
+        if ($this->existingReservation && $this->existingReservation->user_id !== Auth::id()) {
+            $this->dispatch('notify', message: 'You are not authorized to modify this reservation.', type: 'error');
+            return;
+        }
     }
 
     public function updated($propertyName)
@@ -110,12 +115,14 @@ class Index extends Component
         $capacity = $this->numberpeople % 2 == 1 ? $this->numberpeople + 1 : $this->numberpeople;
 
         $this->tables = Meja::where('floor', $this->floor)
+            ->where('status', '!=', 0)
             ->where('capacity', '=', $capacity)
             ->orderBy('table_number')
             ->get();
 
         if ($this->numberpeople > 10) {
             $this->tableVip = Meja::where('capacity', '>=', $this->numberpeople)
+                ->where('status', '!=', 0)
                 ->orderBy('table_number')
                 ->get();
         }
@@ -127,26 +134,20 @@ class Index extends Component
     {
         if ($this->date && $this->time) {
             $reservationTime = Carbon::parse($this->time);
-            $minTime = $reservationTime->copy()->subMinutes(60);
-            $maxTime = $reservationTime->copy()->addMinutes(60);
+            $minTime = $reservationTime->copy()->subMinutes(75);
+            $maxTime = $reservationTime->copy()->addMinutes(75);
 
             $this->reservedTables = Reservations::where('reservation_date', $this->date)
-                ->where('status', 'pending')
+                ->whereIn('status', ['pending', 'waiting', 'paid', 'confirmed'])
                 ->whereBetween('reservation_time', [$minTime->format('H:i'), $maxTime->format('H:i')])
-                ->orWhereHas('table', function ($query) {
-                    $query->where('status', 1);
-                })
                 ->pluck('table_id')
                 ->toArray();
         }
     }
 
-
-
     public function addPeople()
     {
         $this->numberpeople = $this->peoples;
-        session(['numberpeople' => $this->numberpeople]);
         $this->loadTables();
     }
 
@@ -175,16 +176,15 @@ class Index extends Component
             }
 
             $tax = 0.11;
-            $totalAmount = $cart->total_amount + ($cart->total_amount * $tax);
+            $totalAmount = $cart->total_amount;
 
-            // Check if user is paying 50% or 100%
-            $paymentAmount = $this->preOrder && $this->paymentOption == 50
-                ? $totalAmount
-                : ($this->paymentOption == 50 ? $totalAmount / 2 : $totalAmount);
+            $totalAmountWithTax = $totalAmount + ($totalAmount * $tax);
+
+            $paymentAmount = $this->paymentOption == 50 ? $totalAmountWithTax / 2 : $totalAmountWithTax;
 
             if ($cart->used_points) {
-                $pointsToUse = $cart->used_points; // Ambil poin yang bisa digunakan
-                $paymentAmount -= $pointsToUse; // Kurangi dari total pembayaran
+                $pointsToUse = $cart->used_points;
+                $paymentAmount -= $pointsToUse;
             }
 
             if ($this->existingReservation) {
@@ -208,7 +208,7 @@ class Index extends Component
                     'guest_count' => $this->numberpeople,
                     'total_amount' => $paymentAmount,
                     'used_points' => $cart->used_points,
-                    'discount_id' => $cart->discount_id ? $this->discount_id : null,
+                    'discount_id' => $cart->discount_id ? $cart->discount_id : null,
                     'is_preorder' => $this->preOrder ? 1 : 0,
                     'payment_option' => $this->preOrder ? 100 : $this->paymentOption,
                     'status' => 'pending',
@@ -229,7 +229,7 @@ class Index extends Component
 
             $this->redirect(route('payment'), navigate: true);
         } catch (\Throwable $th) {
-            $this->dispatch('notify', message: 'Opss something went wrong', type: 'error');
+            $this->dispatch('notify', message: 'Opss something went wrong ' . $th->getMessage(), type: 'error');
         }
     }
 

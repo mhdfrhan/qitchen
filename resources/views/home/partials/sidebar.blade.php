@@ -1,4 +1,4 @@
-<div class="lg:border-r border-borderColor lg:p-4 border-b lg:border-b-0 h-full" x-data="{ open: false }">
+<div class="lg:border-r border-borderColor lg:p-4 border-b lg:border-b-0 h-full print:hidden" x-data="{ open: false }">
     <div class="flex items-center justify-between lg:block gap-3">
         <div>
             <x-application-logo class="w-28" />

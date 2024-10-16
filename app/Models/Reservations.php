@@ -11,6 +11,11 @@ class Reservations extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'reservation_date' => 'datetime',
+        'reservation_time' => 'datetime', // Ini jika waktu tersimpan sebagai datetime
+    ];
+
     public function table()
     {
         return $this->belongsTo(Meja::class);

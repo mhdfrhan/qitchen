@@ -1,9 +1,11 @@
 <x-app-layout>
     <x-slot name="title">{{ $title }}</x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-        </div>
+    <div class="mb-8">
+        <livewire:dashboard.chart>
+    </div>
+    <div class="p-6 bg-white rounded-2xl">
+        <h3 class="text-lg font-semibold mb-4">Recent Reservations</h3>
+        <livewire:dashboard.reservations.index>
     </div>
 </x-app-layout>

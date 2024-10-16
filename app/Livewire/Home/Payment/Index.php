@@ -3,7 +3,6 @@
 namespace App\Livewire\Home\Payment;
 
 use App\Models\Carts;
-use App\Models\ReservationItems;
 use App\Models\Reservations;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
@@ -13,120 +12,180 @@ use Midtrans\Snap;
 
 class Index extends Component
 {
-    public $carts, $cartItems, $reservation, $snapToken, $pointsToAdd = 0;
+    public $carts, $cartItems = [], $reservation, $snapToken, $pointsToAdd = 0;
 
-
-    #[On('payment-success')]
-    public function paymentSuccess()
+    public function mount()
     {
-        // Update status reservation
-        $this->reservation->status = 'waiting';
-        $this->reservation->save();
+        $this->initializeCartAndReservationData();
+        $this->processPayment();
+    }
 
-        // Update loyalty points
+    protected function initializeCartAndReservationData()
+    {
+        if ($this->reservation) {
+            $this->carts = Carts::where('user_id', Auth::user()->id)
+                ->where('status', 'pending')
+                ->first();
+
+            if ($this->carts) {
+                $this->cartItems = $this->carts->cartItems;
+            } else {
+                $this->dispatch('notify', message: 'No pending carts found', type: 'error');
+            }
+        } else {
+            $this->dispatch('notify', message: 'Reservation not found', type: 'error');
+        }
+    }
+
+    protected function processPayment()
+    {
+        try {
+            $this->configureMidtrans();
+
+            $items = $this->getItemsDetails();
+
+            $params = $this->generateTransactionParams($items);
+
+            $this->snapToken = Snap::getSnapToken($params);
+
+            $this->updateReservationWithSnapToken();
+
+            $this->updateLoyaltyPoints();
+        } catch (\Exception $e) {
+            $this->dispatch('notify', message: 'Payment failed: ' . $e->getMessage(), type: 'error');
+        }
+    }
+
+    protected function configureMidtrans()
+    {
+        try {
+            Config::$serverKey = config('midtrans.serverKey');
+            Config::$isProduction = config('midtrans.isProduction', false);
+            Config::$isSanitized = true;
+            Config::$is3ds = true;
+        } catch (\Throwable $th) {
+            $this->dispatch('notify', message: $th->getMessage(), type: 'error');
+            return;
+        }
+    }
+
+    protected function getItemsDetails()
+    {
+        try {
+            $items = [];
+            $totalFullPrice = 0;
+
+            foreach ($this->cartItems as $item) {
+                $fullPrice = (int)$item->price + $item->price * 0.11;
+                $totalFullPrice += $fullPrice * $item->quantity;
+
+                $items[] = [
+                    'id' => $item->menu_id,
+                    'price' => $fullPrice,
+                    'quantity' => $item->quantity,
+                    'name' => $item->menu->name,
+                ];
+            }
+
+            // Hitung faktor diskon
+            $discountFactor = $this->reservation->total_amount / $totalFullPrice;
+
+            // Sesuaikan harga setiap item
+            foreach ($items as &$item) {
+                $item['price'] = round($item['price'] * $discountFactor);
+            }
+
+            return $items;
+        } catch (\Throwable $th) {
+            $this->dispatch('notify', message: $th->getMessage(), type: 'error');
+            return;
+        }
+    }
+
+    protected function generateTransactionParams($items)
+    {
+        $grossAmount = $this->reservation->total_amount;
+        try {
+            return [
+                'transaction_details' => [
+                    'order_id' => uniqid(), // Pastikan order_id unik
+                    'gross_amount' => $grossAmount,
+                ],
+                'customer_details' => [
+                    'first_name' => Auth::user()->name,
+                    'email' => Auth::user()->email,
+                    'phone' => Auth::user()->phone ?? Auth::user()->phone,
+                ],
+                'item_details' => $items,
+            ];
+        } catch (\Throwable $th) {
+            $this->dispatch('notify', message: $th->getMessage(), type: 'error');
+            return;
+        }
+    }
+
+    protected function updateReservationWithSnapToken()
+    {
+        if (!$this->snapToken) {
+            $this->dispatch('notify', message: 'Failed to get Snap Token', type: 'error');
+            return;
+        }
+
+        $this->reservation->snap_token = $this->snapToken;
+        $this->reservation->save();
+    }
+
+    protected function updateLoyaltyPoints()
+    {
         $user = Auth::user();
 
         if ($this->carts->used_points > 0) {
             $user->loyalty_points -= $this->carts->used_points;
-            $user->save();
         }
+
+        $this->pointsToAdd = $this->calculateLoyaltyPoints($this->reservation->total_amount);
+    }
+
+    protected function calculateLoyaltyPoints($totalAmount)
+    {
+        if ($totalAmount > 500000) {
+            return 35000;
+        } elseif ($totalAmount > 300000) {
+            return 25000;
+        } elseif ($totalAmount > 200000) {
+            return 15000;
+        } elseif ($totalAmount > 100000) {
+            return 10000;
+        } elseif ($totalAmount > 50000) {
+            return 5000;
+        }
+
+        return 0;
+    }
+
+    #[On('payment-success')]
+    public function paymentSuccess()
+    {
+        $user = Auth::user();
+
+        $this->reservation->status = 'waiting';
+        $this->reservation->save();
 
         $user->loyalty_points += $this->pointsToAdd;
         $user->save();
 
-        $this->dispatch('notify', message: 'Yey! Payment success, your reservation has been confirmed', type: 'success');
-
         $this->carts->delete();
-        session()->forget('numberpeople');
-    }
 
-    public function mount()
-    {
-        $this->cartItems = $this->carts->cartItems;
-        $this->processPayment();
-    }
-
-    public function processPayment()
-    {
-        // Set your Merchant Server Key
-        \Midtrans\Config::$serverKey = config('midtrans.serverKey');
-        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-        \Midtrans\Config::$isProduction = false;
-        // Set sanitization on (default)
-        \Midtrans\Config::$isSanitized = true;
-        // Set 3DS transaction for credit card to true
-        \Midtrans\Config::$is3ds = true;
-
-        // Ambil data item dari cart
-        $items = [];
-        foreach ($this->cartItems as $item) {
-            $items[] = [
-                'id' => $item->menu_id,
-                'price' => $item->price,
-                'quantity' => $item->quantity,
-                'name' => $item->menu->name,
-            ];
-        }
-
-        // Tambahkan detail reservasi sebagai item tambahan
-        $items[] = [
-            'id' => 'reservation',
-            'price' => 0, // Jika tidak dikenakan biaya khusus untuk reservasi
-            'quantity' => 1,
-            'name' => 'Reservation on ' . $this->reservation->reservation_date . ' at ' . $this->reservation->reservation_time .
-                ', Table ' . $this->reservation->table_id . ', for ' . $this->reservation->guest_count . ' guests',
-        ];
-
-        $params = array(
-            'transaction_details' => array(
-                'order_id' => rand(),
-                'gross_amount' => $this->reservation->total_amount,
-            ),
-            'customer_details' => array(
-                'first_name' => Auth::user()->name,
-                'email' => Auth::user()->email,
-                'phone' => Auth::user()->phone ?? Auth::user()->phone,
-            ),
-            'item_details' => $items, // Menambahkan item details ke dalam request
-        );
-
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
-
-        if (!$snapToken) {
-            $this->dispatch('notify', message: 'Payment failed', type: 'error');
-            return;
-        }
-
-        $this->snapToken = $snapToken;
-
-        // Update loyalty points
-        $user = Auth::user();
-        $totalAmount = $this->reservation->total_amount;
-
-        if ($totalAmount > 500000) {
-            $this->pointsToAdd = 35000;
-        } elseif ($totalAmount > 300000) {
-            $this->pointsToAdd = 25000;
-        } elseif ($totalAmount > 200000) {
-            $this->pointsToAdd = 15000;
-        } elseif ($totalAmount > 100000) {
-            $this->pointsToAdd = 10000;
-        } elseif ($totalAmount > 50000) {
-            $this->pointsToAdd = 5000;
-        }
-
-        $this->reservation->snap_token = $snapToken;
-        $this->reservation->save();
-    }
-
-
-    public function render()
-    {
-        return view('livewire.home.payment.index');
+        $this->dispatch('notify', message: 'Yey! Payment success, your reservation has been confirmed', type: 'success');
     }
 
     public function navigate($route)
     {
-        return $this->redirect(route($route));
+        return $this->redirect(route($route, $this->reservation->reservation_code), navigate: true);
+    }
+
+    public function render()
+    {
+        return view('livewire.home.payment.index');
     }
 }

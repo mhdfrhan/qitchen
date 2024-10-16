@@ -1,4 +1,4 @@
-<footer class="p-6">
+<footer>
     <div class="border border-[#333330] rounded-xl p-4">
         <ul class="flex items-center justify-center gap-3 text-neutral-500">
             <li>

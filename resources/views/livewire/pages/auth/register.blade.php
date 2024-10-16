@@ -82,6 +82,14 @@ new #[Layout('layouts.guest')] class extends Component {
                 {{ __('Register now') }}
             </x-primary-button>
         </div>
+        <div class="mt-4 text-center">
+            <a href="{{ route('auth.google') }}"
+                class="border border-borderColor px-4 py-2 rounded-lg inline-flex items-center gap-3 text-light hover:bg-neutral-900 duration-300">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/480px-Google_%22G%22_logo.svg.png"
+                    alt="Google Logo" class="h-6">
+                <p>Continue with Google</p>
+            </a>
+        </div>
         <p class="text-sm text-neutral-400 text-center mt-3">Already have an account? <a
                 class="text-light hover:underline" href="{{ route('login') }}" wire:navigate>Login</a></p>
     </form>

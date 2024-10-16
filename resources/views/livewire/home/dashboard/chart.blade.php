@@ -15,134 +15,130 @@
         </div>
     </section>
 
-    @push('scripts')
-        <script data-navigate-once>
-            document.addEventListener('livewire:navigated', function() {
-                const ctx1 = document.getElementById('reservationsByMonth');
+    <script data-navigate-once data-navigate-track="reload">
+        document.addEventListener('livewire:navigated', function() {
+            // Reservation Count with Bar Chart
+            const ctx1 = document.getElementById('reservationCountByMonth');
+            const months = @json(array_keys($reservationsByMonth));
 
-                const months = @json(array_keys($reservationsByMonth));
+            // const backgroundColors = [
+            //     'rgba(255, 99, 132, 0.2)',
+            //     'rgba(54, 162, 235, 0.2)',
+            //     'rgba(255, 206, 86, 0.2)',
+            //     'rgba(75, 192, 192, 0.2)',
+            //     'rgba(153, 102, 255, 0.2)',
+            //     'rgba(255, 159, 64, 0.2)',
+            // ];
 
-                const backgroundColors = [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                ];
+            // const borderColors = [
+            //     'rgba(255, 99, 132, 1)',
+            //     'rgba(54, 162, 235, 1)',
+            //     'rgba(255, 206, 86, 1)',
+            //     'rgba(75, 192, 192, 1)',
+            //     'rgba(153, 102, 255, 1)',
+            //     'rgba(255, 159, 64, 1)',
+            // ];
 
-                const borderColors = [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                ];
+            if (ctx1) {
+                ctx1.getContext('2d');
+                const reservationCountByMonth = @json(array_values($reservationCountByMonth));
 
-
-                if (ctx1) {
-                    ctx1.getContext('2d');
-                    const reservationsByMonth = @json(array_values($reservationsByMonth));
-
-                    const myChart1 = new Chart(ctx1, {
-                        type: 'bar',
-                        data: {
-                            labels: months,
-                            datasets: [{
-                                label: 'Total Amount',
-                                data: reservationsByMonth,
-                                backgroundColor: backgroundColors,
-                                borderColor: borderColors,
-                                borderWidth: 1,
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: '#ffffff',
-                                    },
-                                    grid: {
-                                        color: 'rgba(255, 255, 255, 0.1)',
-                                    }
+                const myChart1 = new Chart(ctx1, {
+                    type: 'bar', // Now bar chart for reservation count
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'Reservation Count',
+                            data: reservationCountByMonth,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#ffffff',
                                 },
-                                x: {
-                                    ticks: {
-                                        color: '#ffffff',
-                                    },
-                                    grid: {
-                                        color: 'rgba(255, 255, 255, 0.1)',
-                                    }
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)',
                                 }
                             },
-                            plugins: {
-                                legend: {
-                                    labels: {
-                                        color: '#ffffff',
-                                    }
+                            x: {
+                                ticks: {
+                                    color: '#ffffff',
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)',
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#ffffff',
                                 }
                             }
                         }
-                    });
-                }
+                    }
+                });
+            }
 
+            // Total Amount with Line Chart
+            const ctx2 = document.getElementById('reservationsByMonth');
+            if (ctx2) {
+                ctx2.getContext('2d');
+                const reservationsByMonth = @json(array_values($reservationsByMonth));
 
-
-                const ctx2 = document.getElementById('reservationCountByMonth');
-                if (ctx2) {
-                    ctx2.getContext('2d');
-                    const reservationCountByMonth = @json(array_values($reservationCountByMonth));
-
-                    const myChart2 = new Chart(ctx2, {
-                        type: 'line',
-                        data: {
-                            labels: months,
-                            datasets: [{
-                                label: 'Reservation Count',
-                                data: reservationCountByMonth,
-                                backgroundColor: backgroundColors,
-                                borderColor: borderColors,
-                                borderWidth: 1,
-                                pointStyle: 'circle',
-                                pointRadius: 6,
-                                pointHoverRadius: 12
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: '#ffffff',
-                                    },
-                                    grid: {
-                                        color: 'rgba(255, 255, 255, 0.1)',
-                                    }
+                const myChart2 = new Chart(ctx2, {
+                    type: 'line', // Now line chart for total amount
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'Total Amount',
+                            data: reservationsByMonth,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            pointStyle: 'circle',
+                            pointRadius: 6,
+                            pointHoverRadius: 12
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#ffffff',
                                 },
-                                x: {
-                                    ticks: {
-                                        color: '#ffffff',
-                                    },
-                                    grid: {
-                                        color: 'rgba(255, 255, 255, 0.1)',
-                                    }
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)',
                                 }
                             },
-                            plugins: {
-                                legend: {
-                                    labels: {
-                                        color: '#ffffff',
-                                    }
+                            x: {
+                                ticks: {
+                                    color: '#ffffff',
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)',
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#ffffff',
                                 }
                             }
                         }
-                    });
-                }
+                    }
+                });
+            }
+        });
+    </script>
 
-            });
-        </script>
-    @endpush
 
 </div>

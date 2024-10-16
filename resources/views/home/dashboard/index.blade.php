@@ -50,8 +50,17 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-lg font-bold leading-none">Rp.
-                            {{ number_format(Auth::user()->reservations->sum('total_amount'), 0, ',', '.') }}</h1>
+                        <h1 class="text-lg font-bold leading-none">
+                            Rp.
+                            {{ number_format(
+                                Auth::user()->reservations->reject(function ($reservation) {
+                                        return in_array($reservation->status, ['pending', 'cancelled']);
+                                    })->sum('total_amount'),
+                                0,
+                                ',',
+                                '.',
+                            ) }}
+                        </h1>
                         <h3 class="font-semibold text-neutral-500 text-sm">Total Spending</h3>
                     </div>
                 </div>

@@ -7,5 +7,9 @@ use Illuminate\Http\Request;
 
 class MejaController extends Controller
 {
-    //
+    public function index() {
+        return view('dashboard.tables', [
+            'title' => 'Tables'
+        ]);
+    }
 }

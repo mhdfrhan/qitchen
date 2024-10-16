@@ -32,14 +32,13 @@ class Edit extends Component
         $this->validateOnly($propertyName);
     }
 
-    #[On('set-menu-id')]
-    public function setMenuId($id)
-    {
-        $this->menuId = $id;
+    public function mount($menuId) {
+        $this->menuId = $menuId;
         $menu = Menu::findOrFail($this->menuId);
         if (!$menu) {
             return redirect(route('dashboard'));
         }
+
         $this->name = $menu->name;
         $this->oldName = $menu->name;
         $this->description = $menu->description;
@@ -59,7 +58,7 @@ class Edit extends Component
 
             if (!$menu) {
                 $this->dispatch('close');
-                $this->dispatch('alert', ['message' => 'Opss terjadi kesalahan', 'type' => 'error']);
+                $this->dispatch('alert', ['message' => 'Opss something went wrong', 'type' => 'error']);
                 return;
             }
 
@@ -83,13 +82,13 @@ class Edit extends Component
                 'updated_at' => now(),
             ]);
 
-            $this->dispatch('notify', message: 'Menu berhasil diperbarui', type: 'success');
+            $this->dispatch('notify', message: 'Menu successfully updated', type: 'success');
             $this->dispatch('menu-updated');
             $this->dispatch('close');
             $this->reset();
         } catch (\Throwable $th) {
             $this->dispatch('close');
-            $this->dispatch('alert', ['message' => 'Opss terjadi kesalahan', 'type' => 'error']);
+            $this->dispatch('notify', message: 'Opss something went wrong', type: 'error');
         }
     }
 

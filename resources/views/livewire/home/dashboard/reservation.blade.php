@@ -1,8 +1,8 @@
 <div class="min-w-max">
     @empty($reservations->count())
-    <div>
-        <p class="text-textColor/50">There is no reservation</p>
-    </div>
+        <div>
+            <p class="text-textColor/50">There is no reservation</p>
+        </div>
     @else
         <table class="w-full">
             <thead class="uppercase font-bold border border-borderColor">
@@ -17,7 +17,8 @@
             </thead>
             <tbody>
                 @foreach ($reservations as $reservation)
-                    <tr class="border border-borderColor hover:bg-neutral-900 cursor-pointer" wire:click="navigateToReservationDetail('{{ $reservation->reservation_code }}')">
+                    <tr class="border border-borderColor hover:bg-neutral-900 cursor-pointer"
+                        wire:click="navigateToReservationDetail('{{ $reservation->reservation_code }}')">
                         <td class="py-3 px-4 text-left">{{ date('d M Y', strtotime($reservation->reservation_date)) }}</td>
                         <td class="py-3 px-4 text-left">{{ date('H:i', strtotime($reservation->reservation_time)) }}</td>
                         <td class="py-3 px-4 text-left">{{ $reservation->table->table_number }}</td>
@@ -26,7 +27,16 @@
                             {{ number_format($reservation->total_amount, 0, ',', '.') }}</td>
                         <td class="py-3 px-4 text-left">
                             <span
-                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $reservation->status == 'waiting' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                            {{ $reservation->status == 'waiting'
+                                ? 'bg-orange-200 text-orange-800'
+                                : ($reservation->status == 'confirmed'
+                                    ? 'bg-green-200 text-green-800'
+                                    : ($reservation->status == 'cancelled'
+                                        ? 'bg-red-200 text-red-800'
+                                        : ($reservation->status == 'finished'
+                                            ? 'bg-blue-200 text-blue-800'
+                                            : 'bg-gray-200 text-gray-800'))) }}">
                                 {{ $reservation->status }}
                             </span>
                         </td>
