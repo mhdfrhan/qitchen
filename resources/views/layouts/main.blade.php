@@ -34,14 +34,19 @@
 
     <main class="{{ !request()->routeIs('home.dashboard') ? 'min-h-screen' : '' }} w-auto">
         {{ $slot }}
+
+        @persist('chatbot')
+            <livewire:home.chatbot>
+        @endpersist
     </main>
+
 
     {{-- @include('home.partials.footer') --}}
 
     @stack('scripts')
 
-    @livewireScripts
 
+    @livewireScripts
     @stack('scripts-livewire')
 </body>
 

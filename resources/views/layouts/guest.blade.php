@@ -14,6 +14,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Forum&display=swap" rel="stylesheet">
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
 
+    <link rel="shortcut icon" href="{{ asset('assets/logo.svg') }}" type="image/x-icon">
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
